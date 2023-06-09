@@ -1,0 +1,12 @@
+.footer{
+    width:100%;
+    color:black;
+    min-height: 100px;
+    position: relative;
+    bottom: 0;
+    background: #98D8AA;
+}
+
+.footer .first, .second , .third {
+    widows: 300px;
+}
