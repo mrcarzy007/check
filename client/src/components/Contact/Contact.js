@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import React, { useState } from 'react'
 import "./Contact.css";
 import { ToastContainer, toast } from 'react-toastify';
-
+// import  axios from 'axios';
 
  
 const Contact = () => {
@@ -24,43 +24,52 @@ const Contact = () => {
        setInputvalue(()=>{
         return {
           ...inputvalue,
-          [name]:value
+          [name ]:value
         }
        })
     }
-   const sentUserdata = async(e) => {
+    //  
+    const sentUser = async(e) => {
       e.preventDefault();
 
       const {fname,lname,email,mobile,message} = inputvalue;
-          if(fname == ""){
-           toast.error("First name is required")
-          }else if (lname == ""){
-            toast.error("Last name is required")
-           
-          }else if (email == "")
-          {
-            toast.error("Email is required")
+      if (fname == "") {
+        toast.error("First name is required");
+        return;
+      }
+      if (lname == "") {
+        toast.error("Last name is required");
+        return;
+      }
+      if (email == "") {
+        toast.error("Email is required");
+        return;
+      }
+      if (!email?.includes("@")) {
+        toast.error("Invalid email");
+        return;
+      }
+      if (mobile == "") {
+        toast.error("mobile is required");
+        return;
+      }else {
+        const res = await fetch("http://localhost:6500/register", {
+          method : "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body : JSON.stringify({
+            fname,lname,email,mobile,message
+          })
+        })
+         const data = await res.json();
+         console.log(data);
+      }
+    
+    }
+      
 
-          }else if (!email.includes("@")){
-            toast.error("Invalid email")
-          }else if (mobile == ""){
-            toast.error("mobile is required")
-          }else {
-              const res = await fetch("/register", {
-                method: "POST",
-                headers : {
-                  "content-Type" : "application/json"
-                },
-                body:JSON.stringify({
-                  fname,lname,email,mobile,message
-                })  
-              });
-              const data = await res.json();
-              console.log(data)    
-          
-            }
 
-   }
   return (
       <>
         <div className='container mb-3 contact'>
@@ -86,7 +95,7 @@ const Contact = () => {
         <Form.Label>Message</Form.Label>
         <Form.Control as="textarea" rows={4}  name="message" onChange={getvalue} />
       </Form.Group>
-      <Button variant="primary" type="submit" className='mt-5 mb-5' onClick={sentUserdata} >
+      <Button variant="primary" type="submit" className='mt-5 mb-5' onClick={sentUser}>
         Submit
       </Button>
     </Form>
